@@ -1,0 +1,3 @@
+{% for k,v in app.env.items() %}
+{{ k | upper }}={{ v }}
+{% endfor %}

@@ -1,0 +1,23 @@
+version: '3.0'
+services:
+  'zabbix_web':
+    container_name: zabbix_web
+    hostname: zabbix_web
+    image: zabbix/zabbix-web-nginx-pgsql:${ZABBIX_IMAGE_VERSION}
+    restart: on-failure
+    ports:
+      - 80:80
+      - 443:443
+
+    networks:
+      - app_network
+
+    env_file:
+    - .env
+#    volumes:
+#      - ./var:/var/lib/zabbix
+
+networks:
+    app_network:
+        external:
+            name: zbx_network

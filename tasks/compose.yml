@@ -1,0 +1,25 @@
+---
+# tasks file for ansible-zabbix-docker
+
+- name: "[{{ app.name }}] create application directory"
+  file: state=directory path={{ app.home }} recurse=true
+
+- name: "[{{ app.name }}] copy systemd unit"
+  template: src="compose.service.j2" dest="/etc/systemd/system/{{ app.name }}.service"
+  notify: systemctl daemon-reload
+
+- meta: flush_handlers
+
+- name: "[{{ app.name }}] copy docker-compose template"
+  template: dest="{{ app.home }}/docker-compose.yml" src={{ app.dc_template | default("dc_{{ app.name }}.j2") }} mode=0640
+  notify: restart {{ app.name }}
+
+- name: "[{{ app.name }}] copy ENV template"
+  template: dest="{{ app.home }}/.env" src="dc_env.j2" mode=0640
+  notify: restart {{ app.name }}
+
+- name: "[{{ app.name }}] re-pull fresh images"
+  command: docker-compose pull
+  args:
+    chdir: "{{ app.home }}"
+

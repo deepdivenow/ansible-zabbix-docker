@@ -1,0 +1,13 @@
+---
+# tasks file for ansible-zabbix-docker
+
+- include_tasks: install.yml
+
+- include_tasks: compose.yml
+  with_items: "{{ zabbix_apps }}"
+  loop_control:
+    loop_var: app
+
+- include_tasks: zabbix_web_users.yml
+  when: '"zabbix_web" in zabbix_services'
+

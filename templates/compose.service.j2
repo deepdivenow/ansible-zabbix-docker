@@ -1,0 +1,13 @@
+[Unit]
+Description=Launch {{ app.name }} in docker-compose
+Requires=docker.service
+After=docker.service
+
+[Service]
+WorkingDirectory={{ app.home }}
+ExecStart=/usr/bin/docker-compose up
+ExecStop=/usr/bin/docker-compose down
+User=root
+
+[Install]
+WantedBy=multi-user.target

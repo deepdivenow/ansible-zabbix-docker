@@ -1,0 +1,22 @@
+version: '3.0'
+services:
+  'zbx_postgres':
+    container_name: zbx_postgres
+    hostname: zbx_postgres
+    image: postgres:${POSTGRES_IMAGE_VERSION}
+    restart: on-failure
+#    ports:
+#      - 5432:5432
+
+    networks:
+      - app_network
+
+    env_file:
+    - .env
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+networks:
+    app_network:
+        external:
+            name: zbx_network
